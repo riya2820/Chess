@@ -1,21 +1,31 @@
+from ipaddress import collapse_addresses
+from sqlite3 import Row
+# maybe?
+# import board 
+
+# make functions to check validity of moves
+# such as check diagonal etc etc
+
 class Piece():
     """
     Put description of the Piece class here
     """
-    def __init__(self):
+    def __init__(self, name, color):
         # add any additional parameters
         # standard initiation of a piece 
-        pass
+        self.name = ""
+        self.color = color
         
     def is_valid_move(self):
         return False
 
     def is_white(self):
-        pass
+        return self.color == 'WHITE'
 
     def __str__(self):
         # replace the body and return a string with how you want your piece
         # to be printed as when `print([A Piece Object])` is called
+        # return str(self.piece)
         return ''
         
 # I'll add which parameters I generally used for the specific subclasses
@@ -25,35 +35,40 @@ class Rook(Piece):
     def __init__(self, color):
         # super().__init__(...) can be super helpful in just calling the 
         # parrent init function to avoid the same lines of code
-        pass
+        super().__init__(color)
+        self.name = "R"
 
     def is_valid_move(self, board, start, to):
+        '''
+        if self.board[start][to] == "":
+            # move piece here   
+        '''    
         pass
 
 class Knight(Piece):
     def __init__(self):
-        pass
+        self.name = "N"
 
     def is_valid_move(self):
         pass
 
 class Bishop(Piece):
     def __init__(self):
-        pass
+        self.name = "B"
 
     def is_valid_move(self):
         pass
 
 class Queen(Piece):
     def __init__(self):
-        pass
+        self.name = "Q"
 
     def is_valid_move(self):
         pass
 
 class King(Piece):
     def __init__(self):
-        pass
+        self.name = "K"
 
     def is_valid_move(self):
         pass
@@ -66,14 +81,15 @@ class King(Piece):
 # en passant is possible
 class GhostPawn(Piece):
     def __init__(self, color):
-        pass
+        super().__init__(color)
+        self.name = "P"
 
     def is_valid_move(self):
         return False
 
 class Pawn(Piece):
     def __init__(self):
-        pass
+        self.name = "P"
 
     def is_valid_move(self):
         pass
