@@ -13,30 +13,41 @@ class Board():
         self.create_board()
 
     def create_board(self):
-        elements = ['R','N','B','Q','K','B','N','R']
-        for row in range(8):
-            self.board.append([])
-            for col in range(8):
-                # see how to put different colors 
-                if row < 2: # black pieces 
-                    if row == 0:
-                        i = 0 
-                        while i < 8:
-                            self.board[row].append([elements[i]]) 
-                            i += 1
-                    else:
-                        self.board[row].append(['P']*8)
+        self.symbols = {
+            'P': '♙',
+            'R': '♖',
+            'N': '♘',
+            'B': '♗',
+            'Q': '♕',
+            'K': '♔',
+            'p': '♟',
+            'r': '♜',
+            'n': '♞',
+            'b': '♝',
+            'q': '♛',
+            'k': '♚',
+            ' ': '-'
+        }
 
-                if row > 5: # white pieces
-                    if row == 7:
-                        i = 0 
-                        while i < 8:
-                            self.board[row].append([elements[i]]) 
-                            i += 1
-                    else:
-                        self.board[row].append(['P']*8)
+        # black_pieces = ['R','N','B','Q','K','B','N','R']
+        # white_pieces = ['r','n','b','q','k','b','n','r']
 
+        self.board = [
+        ['R','N','B','Q','K','B','N','R'],
+        ['P','P','P','P','P','P','P','P'],
+        [' ',' ',' ',' ',' ',' ',' ',' '],
+        [' ',' ',' ',' ',' ',' ',' ',' '],
+        [' ',' ',' ',' ',' ',' ',' ',' '],
+        [' ',' ',' ',' ',' ',' ',' ',' '],
+        ['p','p','p','p','p','p','p','p'],
+        ['r','n','b','q','k','b','n','r'] 
+        ]
+        
 
     def print_board(self):
         # replace body with how you want your board printed
-        pass
+        # two iterations since its a 2D array
+        for row in self.board:
+            print("\n")
+            for piece in row:
+                print(self.symbols[piece], end=" ")
