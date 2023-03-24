@@ -5,13 +5,46 @@ if __name__ == "__main__":
     chess = chess.Chess()
     chess.board.print_board()
 
+    black_pieces = ["P", "R", "N", "B", "Q"]
+    white_pieces = ["p", "r", "n", "b", "q"]
+
     while True:
-        start = input("From: ")
-        to = input("To: ")
-        
-        '''
-        start = translate(start)
-        to = translate(to)'''
+        print("\nTaking input of next move")
+        try:
+            # lets say move was f2 to f3
+            # make sure input is always lowercase !
+            white_turn = True # some variable to check turn ??
+            # Also, check that piece is there at this location
+            start = input("From: ")
+            row0, col0 = ord(start[0].lower())-ord("a"), start[1]
+            
+            if chess.board.board[row0][col0] == "-":
+                # print("Invalid starting position, enter again.")
+                raise IndexError
+
+            # Also, check that location is either empty or occupied by opponents piece 
+            to = input("To: ")
+            row1, col1 = ord(to[0].lower())-ord("a"), to[1]
+
+            if white_turn == True:
+                if chess.board.board[row0][col0] != "-" or chess.board.board[row0][col0] not in black_pieces:
+                    # print("Invalid position, enter again.")
+                    raise IndexError
+                else:
+                    white_turn = False 
+                    break
+            else:
+                if chess.board.board[row0][col0] != "-" or chess.board.board[row0][col0] not in white_pieces:
+                    # print("Invalid position, enter again.")
+                    raise IndexError
+                else:
+                    white_turn = True
+                    break
+            
+
+        except IndexError:
+            print("Invalid move! Try again.")
+            # continue
 
         if start == None or to == None:
             continue
