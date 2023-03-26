@@ -38,7 +38,30 @@ class Rook(Piece):
         if self.board[start][to] == "":
             # move piece here   
         '''    
-        pass
+        r0, c0 = ord(start[0].lower())-ord("a"), start[1]
+        r1, c1 = ord(end[0].lower())-ord("a"), end[1]
+
+        if r0 != r1 and c0 != c1:
+            return False # rook piece has to be in either same row or col 
+        
+        if r0 == r1: # that means in the same row
+            if c0 < c1:
+                if self.board[r1][c1] == "-" or self.board[r1][c1]:
+                    self.board[r0][c0] 
+                
+
+        else: # that means in the same col
+
+        if (x0, y0+1) == (x1, y1) and self.board[x1][y1] == "-":
+            return True # is valid
+        # how to check if prev piece was "p" or "P" ??!!
+        if ((x0-1, y0) == (x1, y1) or (x0+1, y0) == (x1, y1)) and self.board[x1][y1] == "P" and self.board[x0][y0] == "p":
+            return True
+        if ((x0-1, y0) == (x1, y1) or (x0+1, y0) == (x1, y1)) and self.board[x1][y1] == "p" and self.board[x0][y0] == "P":
+            return True
+            
+        return False
+
 
 class Knight(Piece):
     def __init__(self):
@@ -90,8 +113,8 @@ class Pawn(Piece):
     def is_valid_move(self, board, start, end):
         # can move: up (x, y+1) 
         # capture: left (x-1, y) & right (x+1,y)
-        x0, y0 = start//8, start%8
-        x1, y1 = end//8, end%8
+        x0, y0 = ord(start[0].lower())-ord("a"), start[1]
+        x1, y1 = ord(end[0].lower())-ord("a"), end[1]
 
         if (x0, y0+1) == (x1, y1) and self.board[x1][y1] == "-":
             return True # is valid
@@ -100,7 +123,6 @@ class Pawn(Piece):
             return True
         if ((x0-1, y0) == (x1, y1) or (x0+1, y0) == (x1, y1)) and self.board[x1][y1] == "p" and self.board[x0][y0] == "P":
             return True
-        #else:
-        #   print("move is not valid!")
-        #     raise Error
+
         return False
+
