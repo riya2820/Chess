@@ -1,3 +1,8 @@
+#from ipaddress import collapse_addresses
+# from msilib.schema import Error
+# from sqlite3 import Row
+# maybe?
+from fcntl import F_SEAL_SEAL
 import board 
 
 # make functions to check validity of moves
@@ -126,11 +131,42 @@ class Queen(Piece):
         self.name = "Q"
 
     def is_valid_move(self, board, start, end):
-        pass
+        r0, c0 = ord(start[0].lower())-ord("a"), start[1]
+        r1, c1 = ord(end[0].lower())-ord("a"), end[1]
+
+        row_direction = 1 if r1>r0 else -1
+        col_direction = 1 if r1>r0 else -1
+
+        
+        if r0 == r1: # moving in the same row
+            col_range = range(min(c0,c1)+1, max(c0,c1))
+            for col in col_range:
+                if self.board[r1][col] != "-":
+                    return False # Path blocked 
+                return True  
+
+        if c0 == c1: # moving in the same row
+            row_range = range(min(r0,r1)+1, max(r,r1))
+            for row in row_range:
+                if self.board[row][c1] != "-":
+                    return False # Path blocked 
+                return True  
+
+        if r0 != r1 and c0 != c1: # moving like  a bishop  
+            row, col = r0+row_direction, c0+col_direction 
+            while row != r1 and col != c1: # havent reached yet! checking path
+                if self.board[row][col] != "-":
+                    return False # path blocked 
+                row += row_direction
+                col += col_direction
+            
+
+        return True
 
 class King(Piece):
     def __init__(self):
         self.name = "K"
+        self.king_moved = False
 
     def is_valid_move(self, board, start, end):
         r0, c0 = ord(start[0].lower())-ord("a"), start[1]
@@ -138,14 +174,41 @@ class King(Piece):
 
         # possible moves
         if (r1 == r0+1 and c1 == c0) or (c1 == c0+1 and r0 == r1) or (r1 == r0-1 and c1 == c0) or (r1 == r0 and c1 == c0-1) and r1 >=0 and c1 >= 0:
+            self.king_moved = True
             return True
 
         return False
 
     
     # I added an extra method for the King class
-    def can_castle(self):
-        pass
+    def can_castle(self, start, end):
+        # if king has moved --> False 
+        if self.king_moved:
+            return False
+        # if rook has moved --> False
+        if self.board[start].has_moved:
+            return False
+
+        else:
+            # can move if 
+            # 1) king not under check 
+            if start[0] < self.position[0]:
+                direction  = -1 # left
+            else:
+                direction = 1 # right
+
+            # 2) no pieces between king and rook 
+            current_col = self.position[1] + direction 
+            while current_col != start[1]:
+                if self.board[(self.position[0], current_col)] != "-":
+                    return False
+                current_col += direction # update the col number
+            
+            # 3) new position should not be in check 
+            if self.board.is_square_under_attack(self.position, self.color) or self.board.is_square_under_attack(end, self.color):
+                return False
+
+            return True # all clear, can castle
 
 # Class to represent a pseudo pawn that can be taken when
 # en passant is possible
@@ -175,6 +238,9 @@ class Pawn(Piece):
             return True
         if ((x0-1, y0) == (x1, y1) or (x0+1, y0) == (x1, y1)) and self.board[x1][y1] == "p" and self.board[x0][y0] == "P":
             return True
+
+        return False
+
 
         return False
 
